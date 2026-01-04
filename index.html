@@ -1,0 +1,55 @@
+Here are the three complete files with the integrated side-by-side timer controls (Start, Pause, Reset), the 5-court logic, and the session persistence.
+
+1. index.html
+HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pickleball Club Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Pickleball Club Manager</h1>
+        
+        <div class="settings">
+            <label for="courtCount">Available Courts (1-5):</label>
+            <input type="number" id="courtCount" value="3" min="1" max="5">
+        </div>
+
+        <div class="main-layout">
+            <div class="input-area">
+                <label>Player List (one name per line):</label>
+                <textarea id="playerList" placeholder="Enter player names..."></textarea>
+            </div>
+            
+            <div class="timer-container" id="timerBox">
+                <div id="timerDisplay">15:00</div>
+                <div class="timer-controls">
+                    <input type="number" id="timerMins" value="15" min="1" max="60">
+                    <span>mins</span>
+                </div>
+                <div class="timer-button-row">
+                    <button id="timerBtn" onclick="toggleTimer()">Start</button>
+                    <button id="pauseBtn" onclick="pauseTimer()">Pause</button>
+                    <button id="resetTimerBtn" onclick="resetTimerClock()">Reset</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-generate" onclick="generateNextRound()">Generate Next Round</button>
+            <button class="btn-reset" onclick="resetSession()">Reset All Data</button>
+        </div>
+
+        <div id="roundOutput"></div>
+    </div>
+
+    <audio id="alarmSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
