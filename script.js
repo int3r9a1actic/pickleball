@@ -1,9 +1,10 @@
 let players = JSON.parse(localStorage.getItem('pb-players')) || [];
 let waitCounts = JSON.parse(localStorage.getItem('pb-waitCounts')) || {};
 
+// Initialize
 renderPlayerList();
 
-// Enter key shortcut
+// Enter key shortcut for adding players
 document.getElementById('playerNameInput').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') addPlayer();
 });
@@ -30,7 +31,7 @@ function toggleAll(status) {
 
 function togglePlayer(index) {
     players[index].active = !players[index].active;
-    saveAndRender();
+    saveAndRender(); // This will trigger the recount
 }
 
 function removePlayer(index) {
@@ -49,13 +50,18 @@ function saveAndRender() {
 function renderPlayerList() {
     const listDiv = document.getElementById('playerCheckboxList');
     const countDisplay = document.getElementById('activeCountDisplay');
+    
     if (!listDiv) return;
 
     listDiv.innerHTML = '';
     let activeCount = 0;
 
     players.forEach((p, index) => {
-        if (p.active) activeCount++;
+        // Count active players
+        if (p.active === true || p.active === "true") {
+            activeCount++;
+        }
+
         const item = document.createElement('div');
         item.className = 'player-item';
         item.innerHTML = `
@@ -65,7 +71,11 @@ function renderPlayerList() {
         `;
         listDiv.appendChild(item);
     });
-    countDisplay.innerText = `Checked: ${activeCount}`;
+
+    // Update the badge text
+    if (countDisplay) {
+        countDisplay.innerText = `Checked: ${activeCount}`;
+    }
 }
 
 function generateNextRound() {
