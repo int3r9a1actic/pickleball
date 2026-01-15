@@ -1,22 +1,37 @@
 let players = JSON.parse(localStorage.getItem('pb-players')) || [];
 let waitCounts = JSON.parse(localStorage.getItem('pb-waitCounts')) || {};
 
-// Initialize
+// Initialize the list on page load
 renderPlayerList();
+
+// Allow pressing "Enter" to add a player
+document.getElementById('playerNameInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        addPlayer();
+    }
+});
 
 function addPlayer() {
     const input = document.getElementById('playerNameInput');
     const name = input.value.trim();
-    if (name) {
-        // Prevent duplicate names
-        if (players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
-            alert("Player already in list.");
-            return;
-        }
-        players.push({ name: name, active: true });
+    
+    if (name === "") return; // Don't add empty names
+
+    // Prevent duplicate names
+    if (players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+        alert("This player is already in the list.");
         input.value = '';
-        saveAndRender();
+        return;
     }
+
+    // Add player object to the array
+    players.push({ name: name, active: true });
+    
+    // Clear the input box and focus it for the next name
+    input.value = '';
+    input.focus();
+    
+    saveAndRender();
 }
 
 function sortPlayers() {
@@ -49,15 +64,18 @@ function saveAndRender() {
 
 function renderPlayerList() {
     const listDiv = document.getElementById('playerCheckboxList');
+    if (!listDiv) return;
+
     listDiv.innerHTML = '';
     players.forEach((p, index) => {
-        listDiv.innerHTML += `
-            <div class="player-item">
-                <input type="checkbox" ${p.active ? 'checked' : ''} onchange="togglePlayer(${index})">
-                <span>${p.name}</span>
-                <button class="remove-btn" onclick="removePlayer(${index})">&times;</button>
-            </div>
+        const item = document.createElement('div');
+        item.className = 'player-item';
+        item.innerHTML = `
+            <input type="checkbox" ${p.active ? 'checked' : ''} onchange="togglePlayer(${index})">
+            <span>${p.name}</span>
+            <button class="remove-btn" onclick="removePlayer(${index})">&times;</button>
         `;
+        listDiv.appendChild(item);
     });
 }
 
@@ -66,14 +84,16 @@ function generateNextRound() {
     const numCourts = parseInt(document.getElementById('courtCount').value) || 1;
 
     if (activePool.length < 4) {
-        alert("Select at least 4 players!");
+        alert("Select at least 4 checked players!");
         return;
     }
 
-    // Prepare wait list
-    activePool.forEach(name => { if (waitCounts[name] === undefined) waitCounts[name] = 0; });
+    // Ensure all checked players have a waitCount entry
+    activePool.forEach(name => { 
+        if (waitCounts[name] === undefined) waitCounts[name] = 0; 
+    });
 
-    // Shuffle then Sort by Priority (Benched players move to top)
+    // Shuffle for randomness, then sort by waitCount (highest wait = priority)
     let pool = activePool.sort(() => Math.random() - 0.5);
     pool.sort((a, b) => (waitCounts[b] || 0) - (waitCounts[a] || 0));
 
@@ -107,7 +127,7 @@ function displayRound(active, benched) {
     }
 
     if (benched.length > 0) {
-        html += `<div class="bench"><strong>Benched:</strong> ${benched.join(", ")}</div>`;
+        html += `<div class="bench"><strong>Benched (High Priority):</strong> ${benched.join(", ")}</div>`;
     }
     
     html += `</div>`;
@@ -115,13 +135,13 @@ function displayRound(active, benched) {
 }
 
 function clearHistory() {
-    if (confirm("Clear all round history but keep players?")) {
+    if (confirm("Clear all round history? (Player list will be kept)")) {
         document.getElementById('roundOutput').innerHTML = '';
     }
 }
 
 function resetSession() {
-    if (confirm("Wipe EVERYTHING (all players and rounds)?")) {
+    if (confirm("Wipe everything? This deletes all players and rounds.")) {
         localStorage.clear();
         location.reload();
     }
