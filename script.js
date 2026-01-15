@@ -1,37 +1,21 @@
 let players = JSON.parse(localStorage.getItem('pb-players')) || [];
 let waitCounts = JSON.parse(localStorage.getItem('pb-waitCounts')) || {};
 
-// Initialize the list on page load
 renderPlayerList();
 
-// Allow pressing "Enter" to add a player
+// Enter key shortcut
 document.getElementById('playerNameInput').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        addPlayer();
-    }
+    if (e.key === 'Enter') addPlayer();
 });
 
 function addPlayer() {
     const input = document.getElementById('playerNameInput');
     const name = input.value.trim();
-    
-    if (name === "") return; // Don't add empty names
-
-    // Prevent duplicate names
-    if (players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
-        alert("This player is already in the list.");
+    if (name && !players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+        players.push({ name: name, active: true });
         input.value = '';
-        return;
+        saveAndRender();
     }
-
-    // Add player object to the array
-    players.push({ name: name, active: true });
-    
-    // Clear the input box and focus it for the next name
-    input.value = '';
-    input.focus();
-    
-    saveAndRender();
 }
 
 function sortPlayers() {
@@ -64,10 +48,14 @@ function saveAndRender() {
 
 function renderPlayerList() {
     const listDiv = document.getElementById('playerCheckboxList');
+    const countDisplay = document.getElementById('activeCountDisplay');
     if (!listDiv) return;
 
     listDiv.innerHTML = '';
+    let activeCount = 0;
+
     players.forEach((p, index) => {
+        if (p.active) activeCount++;
         const item = document.createElement('div');
         item.className = 'player-item';
         item.innerHTML = `
@@ -77,6 +65,7 @@ function renderPlayerList() {
         `;
         listDiv.appendChild(item);
     });
+    countDisplay.innerText = `Checked: ${activeCount}`;
 }
 
 function generateNextRound() {
@@ -84,16 +73,12 @@ function generateNextRound() {
     const numCourts = parseInt(document.getElementById('courtCount').value) || 1;
 
     if (activePool.length < 4) {
-        alert("Select at least 4 checked players!");
+        alert("Select at least 4 players!");
         return;
     }
 
-    // Ensure all checked players have a waitCount entry
-    activePool.forEach(name => { 
-        if (waitCounts[name] === undefined) waitCounts[name] = 0; 
-    });
+    activePool.forEach(name => { if (waitCounts[name] === undefined) waitCounts[name] = 0; });
 
-    // Shuffle for randomness, then sort by waitCount (highest wait = priority)
     let pool = activePool.sort(() => Math.random() - 0.5);
     pool.sort((a, b) => (waitCounts[b] || 0) - (waitCounts[a] || 0));
 
@@ -103,7 +88,6 @@ function generateNextRound() {
     const playingNow = pool.slice(0, actualPlayingCount);
     const benched = pool.slice(actualPlayingCount);
 
-    // Update wait counts
     playingNow.forEach(name => waitCounts[name] = 0);
     benched.forEach(name => waitCounts[name] += 1);
 
@@ -113,36 +97,26 @@ function generateNextRound() {
 
 function displayRound(active, benched) {
     const output = document.getElementById('roundOutput');
-    const roundCount = document.querySelectorAll('.round-card').length + 1;
+    const roundCount = output.querySelectorAll('.round-card').length + 1;
     let html = `<div class="round-card"><h3>Round ${roundCount}</h3>`;
     
     for (let i = 0; i < active.length; i += 4) {
         let p1 = active[i], p2 = active[i+1], p3 = active[i+2], p4 = active[i+3];
-        let courtNum = (i/4)+1;
         if (p1 && p2 && p3 && p4) {
-            html += `<div class="court"><strong>Court ${courtNum}:</strong> ${p1} & ${p2} vs ${p3} & ${p4}</div>`;
+            html += `<div class="court"><strong>Court ${(i/4)+1}:</strong> ${p1} & ${p2} vs ${p3} & ${p4}</div>`;
         } else if (p1 && p2) {
-            html += `<div class="court"><strong>Court ${courtNum}:</strong> ${p1} & ${p2} (Wait)</div>`;
+            html += `<div class="court"><strong>Court ${(i/4)+1}:</strong> ${p1} & ${p2} (Wait)</div>`;
         }
     }
-
     if (benched.length > 0) {
-        html += `<div class="bench"><strong>Benched (High Priority):</strong> ${benched.join(", ")}</div>`;
+        html += `<div class="bench"><strong>Next Up:</strong> ${benched.join(", ")}</div>`;
     }
-    
     html += `</div>`;
-    output.innerHTML = html + output.innerHTML;
+    output.insertAdjacentHTML('afterbegin', html);
 }
 
-function clearHistory() {
-    if (confirm("Clear all round history? (Player list will be kept)")) {
-        document.getElementById('roundOutput').innerHTML = '';
-    }
-}
-
-function resetSession() {
-    if (confirm("Wipe everything? This deletes all players and rounds.")) {
-        localStorage.clear();
-        location.reload();
+function clearHistory() { 
+    if (confirm("Clear rounds only? Your player list will be kept.")) {
+        document.getElementById('roundOutput').innerHTML = ''; 
     }
 }
