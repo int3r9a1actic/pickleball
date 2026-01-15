@@ -1,7 +1,7 @@
 let players = JSON.parse(localStorage.getItem('pb-players')) || [];
 let waitCounts = JSON.parse(localStorage.getItem('pb-waitCounts')) || {};
 
-// Initialize
+// Initial render
 renderPlayerList();
 
 // Enter key shortcut for adding players
@@ -31,7 +31,7 @@ function toggleAll(status) {
 
 function togglePlayer(index) {
     players[index].active = !players[index].active;
-    saveAndRender(); // This will trigger the recount
+    saveAndRender();
 }
 
 function removePlayer(index) {
@@ -57,10 +57,7 @@ function renderPlayerList() {
     let activeCount = 0;
 
     players.forEach((p, index) => {
-        // Count active players
-        if (p.active === true || p.active === "true") {
-            activeCount++;
-        }
+        if (p.active) activeCount++;
 
         const item = document.createElement('div');
         item.className = 'player-item';
@@ -72,32 +69,41 @@ function renderPlayerList() {
         listDiv.appendChild(item);
     });
 
-    // Update the badge text
     if (countDisplay) {
         countDisplay.innerText = `Checked: ${activeCount}`;
     }
 }
 
 function generateNextRound() {
+    // Only use players who are checked
     let activePool = players.filter(p => p.active).map(p => p.name);
-    const numCourts = parseInt(document.getElementById('courtCount').value) || 1;
+    const numCourtsRequested = parseInt(document.getElementById('courtCount').value) || 1;
 
     if (activePool.length < 4) {
-        alert("Select at least 4 players!");
+        alert("You need at least 4 checked players to fill a court!");
         return;
     }
 
-    activePool.forEach(name => { if (waitCounts[name] === undefined) waitCounts[name] = 0; });
+    // Ensure all active players have a wait tracking entry
+    activePool.forEach(name => { 
+        if (waitCounts[name] === undefined) waitCounts[name] = 0; 
+    });
 
+    // Shuffle for randomness, then sort by wait priority (High wait = priority)
     let pool = activePool.sort(() => Math.random() - 0.5);
     pool.sort((a, b) => (waitCounts[b] || 0) - (waitCounts[a] || 0));
 
-    const totalCapacity = numCourts * 4;
-    const actualPlayingCount = Math.min(pool.length - (pool.length % 2), totalCapacity);
+    // LOGIC UPDATE: ONLY FULL COURTS
+    // Calculate how many full courts we can actually fill
+    const possibleFullCourts = Math.floor(pool.length / 4);
+    const actualCourtsToFill = Math.min(possibleFullCourts, numCourtsRequested);
     
-    const playingNow = pool.slice(0, actualPlayingCount);
-    const benched = pool.slice(actualPlayingCount);
+    const playingCount = actualCourtsToFill * 4;
+    
+    const playingNow = pool.slice(0, playingCount);
+    const benched = pool.slice(playingCount);
 
+    // Update wait counts: playing resets to 0, benched increases
     playingNow.forEach(name => waitCounts[name] = 0);
     benched.forEach(name => waitCounts[name] += 1);
 
@@ -110,18 +116,18 @@ function displayRound(active, benched) {
     const roundCount = output.querySelectorAll('.round-card').length + 1;
     let html = `<div class="round-card"><h3>Round ${roundCount}</h3>`;
     
+    // active.length will now always be a multiple of 4
     for (let i = 0; i < active.length; i += 4) {
         let p1 = active[i], p2 = active[i+1], p3 = active[i+2], p4 = active[i+3];
-        if (p1 && p2 && p3 && p4) {
-            html += `<div class="court"><strong>Court ${(i/4)+1}:</strong> ${p1} & ${p2} vs ${p3} & ${p4}</div>`;
-        } else if (p1 && p2) {
-            html += `<div class="court"><strong>Court ${(i/4)+1}:</strong> ${p1} & ${p2} (Wait)</div>`;
-        }
+        html += `<div class="court"><strong>Court ${(i/4)+1}:</strong> ${p1} & ${p2} vs ${p3} & ${p4}</div>`;
     }
+
     if (benched.length > 0) {
         html += `<div class="bench"><strong>Next Up:</strong> ${benched.join(", ")}</div>`;
     }
+    
     html += `</div>`;
+    // Insert new round at the top
     output.insertAdjacentHTML('afterbegin', html);
 }
 
