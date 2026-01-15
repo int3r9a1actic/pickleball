@@ -11,12 +11,14 @@
         <h1>Pickleball Club Manager</h1>
         
         <div class="settings">
-            <label for="courtCount">Courts:</label>
-            <input type="number" id="courtCount" value="3" min="1" max="5">
+            <div class="court-setting">
+                <label for="courtCount">Courts:</label>
+                <input type="number" id="courtCount" value="3" min="1" max="5">
+            </div>
+            <div id="activeCountDisplay" class="active-badge">Checked: 0</div>
         </div>
 
         <div class="input-area">
-            <label>Manage Players:</label>
             <div class="add-player-row">
                 <input type="text" id="playerNameInput" placeholder="New player name...">
                 <button onclick="addPlayer()">Add</button>
@@ -28,22 +30,17 @@
                 <button onclick="toggleAll(false)">Uncheck All</button>
             </div>
 
-            <div id="playerCheckboxList" class="checkbox-list">
-                </div>
+            <div id="playerCheckboxList" class="checkbox-list"></div>
         </div>
         
-        <div class="button-group">
-            <button class="btn-generate" onclick="generateNextRound()">Generate Next Round</button>
-        </div>
+        <button class="btn-generate" onclick="generateNextRound()">Generate Next Round</button>
 
         <div id="roundOutput"></div>
 
         <div class="danger-zone">
-            <button class="btn-clear-history" onclick="clearHistory()">Clear Rounds Only</button>
-            <button class="btn-reset" onclick="resetSession()">Reset Everything</button>
+            <button class="btn-clear-history" onclick="clearHistory()">Clear History (Keep Players)</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
