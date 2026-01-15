@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pickleball Match Manager</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -19,10 +19,14 @@
         </div>
 
         <div class="input-area">
-            <div class="add-player-row">
-                <input type="text" id="playerNameInput" placeholder="New player name..." autocomplete="off">
-                <button type="button" onclick="addPlayer()">Add</button>
-            </div>
+            <label>Manage Players:</label>
+            
+            <form id="playerForm" onsubmit="return false;">
+                <div class="add-player-row">
+                    <input type="text" id="playerNameInput" placeholder="New player name..." autocomplete="off">
+                    <button type="button" id="addBtn">Add</button>
+                </div>
+            </form>
             
             <div class="list-controls">
                 <button onclick="sortPlayers()">Sort A-Z</button>
@@ -30,7 +34,8 @@
                 <button onclick="toggleAll(false)">Uncheck All</button>
             </div>
 
-            <div id="playerCheckboxList" class="checkbox-list"></div>
+            <div id="playerCheckboxList" class="checkbox-list">
+                </div>
         </div>
         
         <button class="btn-generate" onclick="generateNextRound()">Generate Next Round</button>
@@ -41,6 +46,7 @@
             <button class="btn-clear-history" onclick="clearHistory()">Clear History (Keep Players)</button>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
