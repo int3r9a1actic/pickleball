@@ -3,56 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>Pickleball Game Manager</title>
+    <title>Pickleball Club Manager</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="apple-touch-icon" href="icon.png">
-    <link rel="icon" type="image/png" href="icon.png">  
 </head>
 <body>
     <div class="container">
-        <h1>Pickleball Game Manager</h1>
+        <h1>Pickleball Club Manager</h1>
         
         <div class="settings">
-            <label for="courtCount">Available Courts (1-5):</label>
+            <label for="courtCount">Courts:</label>
             <input type="number" id="courtCount" value="3" min="1" max="5">
         </div>
 
-        <div class="main-layout">
-            <div class="input-area">
-                <label>Player List (one name per line):</label>
-                <textarea id="playerList" placeholder="Enter player names..."></textarea>
+        <div class="input-area">
+            <label>Manage Players:</label>
+            <div class="add-player-row">
+                <input type="text" id="playerNameInput" placeholder="New player name...">
+                <button onclick="addPlayer()">Add</button>
             </div>
             
-            <div class="timer-container" id="timerBox">
-                <div id="timerDisplay">15:00</div>
-                <div class="timer-controls">
-                    <input type="number" id="timerMins" value="15" min="1" max="60">
-                    <span>mins</span>
-                </div>
-                <div class="timer-button-row">
-                    <button id="timerBtn" onclick="toggleTimer()">Start</button>
-                    <button id="pauseBtn" onclick="pauseTimer()">Pause</button>
-                    <button id="resetTimerBtn" onclick="resetTimerClock()">Reset</button>
-                </div>
+            <div class="list-controls">
+                <button onclick="sortPlayers()">Sort A-Z</button>
+                <button onclick="toggleAll(true)">Check All</button>
+                <button onclick="toggleAll(false)">Uncheck All</button>
             </div>
+
+            <div id="playerCheckboxList" class="checkbox-list">
+                </div>
         </div>
         
         <div class="button-group">
             <button class="btn-generate" onclick="generateNextRound()">Generate Next Round</button>
-            <button class="btn-reset" onclick="resetSession()">Reset All Data</button>
         </div>
 
         <div id="roundOutput"></div>
-    </div>
 
-    <audio id="alarmSound" src="mixkit-classic-alarm-995.wav"></audio>
+        <div class="danger-zone">
+            <button class="btn-clear-history" onclick="clearHistory()">Clear Rounds Only</button>
+            <button class="btn-reset" onclick="resetSession()">Reset Everything</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
-
 </html>
-
-
-
