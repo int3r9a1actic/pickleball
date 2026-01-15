@@ -1,27 +1,27 @@
-body { font-family: -apple-system, system-ui, sans-serif; background: #f0f2f5; padding: 15px; }
-.container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-h1 { text-align: center; color: #007bff; font-size: 1.5rem; margin-top: 0; }
+body { font-family: -apple-system, system-ui, sans-serif; background: #f0f2f5; padding: 15px; margin: 0; }
+.container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-top: 10px; }
+h1 { text-align: center; color: #28a745; font-size: 1.5rem; margin-top: 0; }
 
 .settings { display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
 .court-setting { display: flex; align-items: center; gap: 8px; font-weight: bold; }
-input[type="number"] { width: 50px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-.active-badge { background: #007bff; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+input[type="number"] { width: 50px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; }
+.active-badge { background: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
 
 .add-player-row { display: flex; gap: 5px; margin-bottom: 10px; }
-.add-player-row input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
-.add-player-row button { padding: 0 20px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+.add-player-row input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; -webkit-appearance: none; }
+.add-player-row button { padding: 0 20px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; }
 
 .list-controls { display: flex; gap: 5px; margin-bottom: 10px; }
-.list-controls button { flex: 1; font-size: 11px; padding: 8px; background: #fff; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; color: #666; }
+.list-controls button { flex: 1; font-size: 11px; padding: 10px 5px; background: #fff; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; color: #666; }
 
 .checkbox-list { max-height: 280px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 5px 10px; background: #fafafa; margin-bottom: 15px; }
-.player-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+.player-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
 .player-item:last-child { border-bottom: none; }
-.player-item input { width: 20px; height: 20px; margin-right: 12px; }
+.player-item input { width: 22px; height: 22px; margin-right: 12px; }
 .player-item span { flex: 1; font-size: 16px; }
-.remove-btn { color: #ccc; background: none; border: none; font-size: 1.5rem; cursor: pointer; line-height: 1; }
+.remove-btn { color: #ccc; background: none; border: none; font-size: 1.8rem; cursor: pointer; line-height: 1; padding: 0 10px; }
 
-.btn-generate { width: 100%; background: #28a745; color: white; border: none; padding: 16px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+.btn-generate { width: 100%; background: #28a745; color: white; border: none; padding: 16px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
 .round-card { margin-top: 20px; border-top: 2px solid #eee; padding-top: 15px; }
 .court { background: #e7f3ff; margin: 8px 0; padding: 12px; border-radius: 8px; border-left: 5px solid #007bff; font-weight: 500; }
