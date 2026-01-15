@@ -1,34 +1,31 @@
-body { font-family: -apple-system, system-ui, sans-serif; background: #f0f2f5; padding: 15px; line-height: 1.4; }
+body { font-family: -apple-system, system-ui, sans-serif; background: #f0f2f5; padding: 15px; }
 .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-h1 { text-align: center; color: #007bff; font-size: 1.5rem; margin-bottom: 20px; }
+h1 { text-align: center; color: #007bff; font-size: 1.5rem; margin-top: 0; }
 
-.settings { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background: #f8f9fa; padding: 10px; border-radius: 6px; font-weight: bold; }
-input[type="number"] { width: 50px; padding: 8px; border-radius: 4px; border: 1px solid #ddd; }
+.settings { display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
+.court-setting { display: flex; align-items: center; gap: 8px; font-weight: bold; }
+input[type="number"] { width: 50px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+.active-badge { background: #007bff; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
 
 .add-player-row { display: flex; gap: 5px; margin-bottom: 10px; }
-.add-player-row input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; }
-.add-player-row button { padding: 10px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+.add-player-row input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
+.add-player-row button { padding: 0 20px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
 .list-controls { display: flex; gap: 5px; margin-bottom: 10px; }
-.list-controls button { flex: 1; font-size: 11px; padding: 5px; background: #e9ecef; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; color: #495057; }
+.list-controls button { flex: 1; font-size: 11px; padding: 8px; background: #fff; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; color: #666; }
 
-.checkbox-list { max-height: 300px; overflow-y: auto; border: 1px solid #eee; padding: 5px 10px; border-radius: 6px; margin-bottom: 20px; background: #fff; }
-.player-item { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f1f1; }
+.checkbox-list { max-height: 280px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 5px 10px; background: #fafafa; margin-bottom: 15px; }
+.player-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
 .player-item:last-child { border-bottom: none; }
-.player-item input { width: 18px; height: 18px; margin-right: 12px; cursor: pointer; }
-.player-item span { flex: 1; font-size: 15px; }
-.remove-btn { color: #ccc; background: none; border: none; cursor: pointer; font-size: 1.4rem; padding: 0 5px; }
-.remove-btn:hover { color: #ff4d4d; }
+.player-item input { width: 20px; height: 20px; margin-right: 12px; }
+.player-item span { flex: 1; font-size: 16px; }
+.remove-btn { color: #ccc; background: none; border: none; font-size: 1.5rem; cursor: pointer; line-height: 1; }
 
-.btn-generate { width: 100%; background: #28a745; color: white; border: none; padding: 15px; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 18px; transition: 0.2s; }
-.btn-generate:active { transform: scale(0.98); }
+.btn-generate { width: 100%; background: #28a745; color: white; border: none; padding: 16px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
 
-.round-card { margin-top: 25px; border-top: 2px solid #eee; padding-top: 15px; animation: fadeIn 0.3s; }
+.round-card { margin-top: 20px; border-top: 2px solid #eee; padding-top: 15px; }
 .court { background: #e7f3ff; margin: 8px 0; padding: 12px; border-radius: 8px; border-left: 5px solid #007bff; font-weight: 500; }
 .bench { background: #fff3cd; padding: 12px; border-radius: 8px; border-left: 5px solid #ffc107; margin-top: 10px; font-size: 0.9rem; }
 
-.danger-zone { margin-top: 40px; display: flex; gap: 10px; border-top: 1px dashed #ccc; padding-top: 20px; }
-.btn-clear-history, .btn-reset { flex: 1; background: none; border: 1px solid #ddd; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 11px; color: #888; }
-.btn-reset:hover { background: #fff5f5; color: #dc3545; border-color: #dc3545; }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.danger-zone { margin-top: 30px; border-top: 1px dashed #ddd; padding-top: 15px; }
+.btn-clear-history { width: 100%; font-size: 11px; padding: 8px; background: none; border: 1px solid #ddd; border-radius: 4px; color: #999; cursor: pointer; }
