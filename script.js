@@ -1,26 +1,43 @@
 let players = JSON.parse(localStorage.getItem('pb-players')) || [];
 let waitCounts = JSON.parse(localStorage.getItem('pb-waitCounts')) || {};
 
-// Initial render
-renderPlayerList();
+// Call once on start
+window.onload = function() {
+    renderPlayerList();
+};
 
 // Enter key shortcut for adding players
 document.getElementById('playerNameInput').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') addPlayer();
+    if (e.key === 'Enter') {
+        addPlayer();
+    }
 });
 
 function addPlayer() {
     const input = document.getElementById('playerNameInput');
     const name = input.value.trim();
-    if (name && !players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
-        players.push({ name: name, active: true });
-        input.value = '';
-        saveAndRender();
+    
+    if (!name) return;
+
+    // Check for duplicates
+    const isDuplicate = players.some(p => p.name.toLowerCase() === name.toLowerCase());
+    if (isDuplicate) {
+        alert("This name already exists.");
+        return;
     }
+
+    // Add to array
+    players.push({ name: name, active: true });
+    
+    // Cleanup input
+    input.value = '';
+    
+    // Save and Refresh UI
+    saveAndRender();
 }
 
 function sortPlayers() {
-    players.sort((a, b) => a.name.localeCompare(b.name));
+    players.sort((a, b) => a.name.localeCompare(b.name, undefined, {sensitivity: 'base'}));
     saveAndRender();
 }
 
@@ -63,7 +80,7 @@ function renderPlayerList() {
         item.className = 'player-item';
         item.innerHTML = `
             <input type="checkbox" ${p.active ? 'checked' : ''} onchange="togglePlayer(${index})">
-            <span>${p.name}</span>
+            <span onclick="togglePlayer(${index})" style="cursor:pointer">${p.name}</span>
             <button class="remove-btn" onclick="removePlayer(${index})">&times;</button>
         `;
         listDiv.appendChild(item);
@@ -75,35 +92,29 @@ function renderPlayerList() {
 }
 
 function generateNextRound() {
-    // Only use players who are checked
     let activePool = players.filter(p => p.active).map(p => p.name);
     const numCourtsRequested = parseInt(document.getElementById('courtCount').value) || 1;
 
     if (activePool.length < 4) {
-        alert("You need at least 4 checked players to fill a court!");
+        alert("Need at least 4 checked players.");
         return;
     }
 
-    // Ensure all active players have a wait tracking entry
     activePool.forEach(name => { 
         if (waitCounts[name] === undefined) waitCounts[name] = 0; 
     });
 
-    // Shuffle for randomness, then sort by wait priority (High wait = priority)
     let pool = activePool.sort(() => Math.random() - 0.5);
     pool.sort((a, b) => (waitCounts[b] || 0) - (waitCounts[a] || 0));
 
-    // LOGIC UPDATE: ONLY FULL COURTS
-    // Calculate how many full courts we can actually fill
+    // Fill only full courts
     const possibleFullCourts = Math.floor(pool.length / 4);
     const actualCourtsToFill = Math.min(possibleFullCourts, numCourtsRequested);
-    
     const playingCount = actualCourtsToFill * 4;
     
     const playingNow = pool.slice(0, playingCount);
     const benched = pool.slice(playingCount);
 
-    // Update wait counts: playing resets to 0, benched increases
     playingNow.forEach(name => waitCounts[name] = 0);
     benched.forEach(name => waitCounts[name] += 1);
 
@@ -113,10 +124,8 @@ function generateNextRound() {
 
 function displayRound(active, benched) {
     const output = document.getElementById('roundOutput');
-    const roundCount = output.querySelectorAll('.round-card').length + 1;
-    let html = `<div class="round-card"><h3>Round ${roundCount}</h3>`;
+    let html = `<div class="round-card"><h3>Round Assignment</h3>`;
     
-    // active.length will now always be a multiple of 4
     for (let i = 0; i < active.length; i += 4) {
         let p1 = active[i], p2 = active[i+1], p3 = active[i+2], p4 = active[i+3];
         html += `<div class="court"><strong>Court ${(i/4)+1}:</strong> ${p1} & ${p2} vs ${p3} & ${p4}</div>`;
@@ -127,12 +136,11 @@ function displayRound(active, benched) {
     }
     
     html += `</div>`;
-    // Insert new round at the top
     output.insertAdjacentHTML('afterbegin', html);
 }
 
 function clearHistory() { 
-    if (confirm("Clear rounds only? Your player list will be kept.")) {
+    if (confirm("Clear rounds only?")) {
         document.getElementById('roundOutput').innerHTML = ''; 
     }
 }
